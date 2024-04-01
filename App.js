@@ -4,15 +4,16 @@ import SignInScreen from './.vscode/screen/SignInScreen/SignInScreen';
 import SignUpScreen from './.vscode/screen/SignUpScreen/SignUpScreen';
 import ResetPasswordScreen from './.vscode/screen/ResetPasswordScreen/ResetPasswordScreen';
 import EmailConFirmScreen from './.vscode/screen/EmailConfirmScreen/EmailConFirmScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AuthenticationScreen from './.vscode/screen/AuthenticationScreen/AuthenticationScreen';
 
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    //<BackgroundScreen/>
-    <View style={styles.container}>
-      <SignUpScreen/>
-      
-    </View>
+      <AuthenticationScreen/>
+
   )
 }
 

@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
 import { ImageBackground, StyleSheet, Text, View, Image, Pressable } from 'react-native';
-import CustomInput from '../../../components/CustomInput';
 import CustomButton from '../../../components/CustomButton';
+import CustomInput from '../../../components/CustomInput';
 import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { auth } from '../../../firebase';
 
-
-function SignInScreen() {
-    const navigation = useNavigation(); 
-    const {username, setUsername} = useState('');
-    const {password, setPassword} = useState('');
+function AuthenticationScreen() {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [SignInVisible, setSignInVisible] = useState('none');
+    const [SignUpVisible, setSignUpVisible] = useState('flex');
     const onSignInPressed = () => {
-        
+
     }
     const onForgotPressed = () => {
         console.log("forgot")
@@ -24,9 +26,25 @@ function SignInScreen() {
     }
     const onSignUpSecondary = () => {
         console.log("sign up secondary")
-        navigation.navigate("Sign up")
+        setSignInVisible("none")
+        setSignUpVisible("flex")
+    }
+    const handleSignUp = () => {
+        auth
+        .createUserWithEmailAndPassword(email, password)
+        .then(userCredentials => {
+            const user = userCredentials.user;
+            console.log(user.email);
+        })
+        .catch(error => alert(error.message))
+    }
+    const onSignInSecondary = () => {
+        console.log("sign in secondary")
+        setSignInVisible("flex")
+        setSignUpVisible("none")
     }
   return (
+
     <ImageBackground 
         source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/welcome-image.png")} 
         style={styles.background}>
@@ -34,8 +52,26 @@ function SignInScreen() {
             style = {styles.logo}
             source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/logo.png")}
         />
-        <View 
-            style={styles.container}>
+
+        <View
+            id='Sign up box' 
+            style={[styles.container, {display : SignUpVisible}]}>
+            <CustomInput placeholder = "Username" value={username} setValue={text => setUsername(text)}/>
+            <CustomInput placeholder = "Password" value={password} setValue={text => setPassword(text)} secureTextEntry={true}/>
+            <CustomInput placeholder = "Confirm password" value={confirmPassword} setValue={text => setConfirmPassword(text)} secureTextEntry={true}/>  
+            <CustomInput placeholder={"Email"} value={email} setValue={text => setEmail(text)}/>
+            <CustomButton text= "Sign up" onPress={handleSignUp}/>
+            <View style = {{flex : 1, justifyContent : 'flex-end', marginBottom : 10}}>
+            <Text style={{marginVertical : 10}}> Already have an account?  
+                <Text style={{
+                    color : '#5A57E1', fontWeight : 'bold'}} 
+                    onPress={onSignInSecondary}> Sign in</Text>
+            </Text>
+            </View>
+        </View>
+        <View
+            id='Sign in box' 
+            style={[styles.container, {display : SignInVisible}]}>
             <CustomInput placeholder = "Username" value={username} setValue={setUsername}/>
             <CustomInput placeholder = "Password" value={password} setValue={setPassword} secureTextEntry={true}/>
             <CustomButton text= "Sign in" onPress={onSignInPressed}/>
@@ -59,11 +95,9 @@ const styles = StyleSheet.create({
         flex : 1,
         alignItems : 'center',
         alignContent : 'center',
-        padding : 30
+        padding : 30,
     },
     logo : {
-        //position : 'absolute',
-        //top : 100,
         height : 260,
         width : 260,
         resizeMode : 'contain'
@@ -71,7 +105,6 @@ const styles = StyleSheet.create({
     container : {
         backgroundColor : "#F4F4F3",
         alignItems : 'center',
-        //alignContent : 'center',
         width : "100%",
         height : 400,
         paddingHorizontal : 30,
@@ -82,4 +115,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default SignInScreen
+export default AuthenticationScreen
