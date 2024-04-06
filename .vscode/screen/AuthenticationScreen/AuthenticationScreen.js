@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { ImageBackground, StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import CustomButton from '../../../components/CustomButton';
 import CustomInput from '../../../components/CustomInput';
 import { useState } from 'react'
 import { auth } from '../../../firebase';
+import { useNavigation } from '@react-navigation/native';
 
 function AuthenticationScreen() {
 
-
+    const navigation = useNavigation()
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -51,15 +52,24 @@ function AuthenticationScreen() {
         setSignInVisible("flex")
         setSignUpVisible("none")
     }
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                navigation.navigate("How to use Screen")
+            }
+        })
+        return unsubscribe
+    })
   return (
 
     <ImageBackground 
-        //source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/welcome-image.png")} 
-        source={{uri : "https://i.postimg.cc/W4g2JVfC/welcome-image.png"}}
+        source={require("../../../assets/welcome-image.png")} 
         style={styles.background}>
         <Image
             style = {styles.logo}
-            source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/logo.png")}
+            //source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/logo.png")}
+            source={require("../../../assets/logo.png")}
         />
 
         <View
