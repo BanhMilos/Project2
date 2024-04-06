@@ -19,3 +19,7 @@ Next week goal :
 + Add a 3-screen "How to use" slider following first user sign up
 + Add home page
 + Add image capturing function
+
+Update Week 1 Month 2 (4/7/2024)
+- Commit took too long, the commit message "message" is pure unintentional, it supposed to be "wtf commit takes so long???"
+- Add how to slider (Unfinished : Slide 2 and slide 3 Image, How to slider suppose to pop after first user sign up, not user sign in)
