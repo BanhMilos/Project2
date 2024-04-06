@@ -6,14 +6,22 @@ import { useState } from 'react'
 import { auth } from '../../../firebase';
 
 function AuthenticationScreen() {
+
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [SignInVisible, setSignInVisible] = useState('none');
     const [SignUpVisible, setSignUpVisible] = useState('flex');
-    const onSignInPressed = () => {
-
+    const handleSignIn = () => {
+        auth
+        .signInWithEmailAndPassword(email, password)
+        .then(userCredentials => {
+            const user = userCredentials.user;
+            console.log(user.email + " signed in");
+        })
+        .catch(error => alert(error.message))
     }
     const onForgotPressed = () => {
         console.log("forgot")
@@ -24,8 +32,8 @@ function AuthenticationScreen() {
     const onSignInGoogle = () => {
         console.log("sign in google")
     }
-    const onSignUpSecondary = () => {
-        console.log("sign up secondary")
+    const onSignUpSwitch = () => {
+        console.log("sign up switched")
         setSignInVisible("none")
         setSignUpVisible("flex")
     }
@@ -38,15 +46,16 @@ function AuthenticationScreen() {
         })
         .catch(error => alert(error.message))
     }
-    const onSignInSecondary = () => {
-        console.log("sign in secondary")
+    const onSignInSwitch = () => {
+        console.log("sign in switched")
         setSignInVisible("flex")
         setSignUpVisible("none")
     }
   return (
 
     <ImageBackground 
-        source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/welcome-image.png")} 
+        //source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/welcome-image.png")} 
+        source={{uri : "https://i.postimg.cc/W4g2JVfC/welcome-image.png"}}
         style={styles.background}>
         <Image
             style = {styles.logo}
@@ -56,25 +65,25 @@ function AuthenticationScreen() {
         <View
             id='Sign up box' 
             style={[styles.container, {display : SignUpVisible}]}>
-            <CustomInput placeholder = "Username" value={username} setValue={text => setUsername(text)}/>
+            <CustomInput placeholder={"Email"} value={email} setValue={text => setEmail(text)}/>
             <CustomInput placeholder = "Password" value={password} setValue={text => setPassword(text)} secureTextEntry={true}/>
             <CustomInput placeholder = "Confirm password" value={confirmPassword} setValue={text => setConfirmPassword(text)} secureTextEntry={true}/>  
-            <CustomInput placeholder={"Email"} value={email} setValue={text => setEmail(text)}/>
+            <CustomInput placeholder = "Username" value={username} setValue={text => setUsername(text)}/>
             <CustomButton text= "Sign up" onPress={handleSignUp}/>
             <View style = {{flex : 1, justifyContent : 'flex-end', marginBottom : 10}}>
             <Text style={{marginVertical : 10}}> Already have an account?  
                 <Text style={{
                     color : '#5A57E1', fontWeight : 'bold'}} 
-                    onPress={onSignInSecondary}> Sign in</Text>
+                    onPress={onSignInSwitch}> Sign in</Text>
             </Text>
             </View>
         </View>
         <View
             id='Sign in box' 
             style={[styles.container, {display : SignInVisible}]}>
-            <CustomInput placeholder = "Username" value={username} setValue={setUsername}/>
+            <CustomInput placeholder = "Email" value={email} setValue={setEmail}/>
             <CustomInput placeholder = "Password" value={password} setValue={setPassword} secureTextEntry={true}/>
-            <CustomButton text= "Sign in" onPress={onSignInPressed}/>
+            <CustomButton text= "Sign in" onPress={handleSignIn}/>
             <Pressable onPress={onForgotPressed}>
                 <Text style={{marginBottom : 10, color : "#5A57E1", left : -90, fontWeight : 'bold'}}> Forgot password </Text>
             </Pressable>
@@ -82,7 +91,7 @@ function AuthenticationScreen() {
             <CustomButton text= "Sign in with Google" bgColor= "#fae9ea" fgColor="#dd4d44" onPress={onSignInGoogle}/>
             <View style={{flex : 1, justifyContent : 'flex-end', marginBottom : 10}}>
             <Text style={{marginVertical : 10}}> Dont have an account? 
-              <Text style={{color : '#5A57E1', fontWeight : 'bold'}} onPress={onSignUpSecondary}> Sign up</Text>
+              <Text style={{color : '#5A57E1', fontWeight : 'bold'}} onPress={onSignUpSwitch}> Sign up</Text>
             </Text>
             </View>
         </View>

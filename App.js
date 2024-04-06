@@ -12,7 +12,11 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-      <AuthenticationScreen/>
+      <NavigationContainer>
+        <Stack.Navigator >
+          <Stack.Screen options = {{headerShown : false}}name='Authentication Screen' component={AuthenticationScreen}/>
+        </Stack.Navigator>
+      </NavigationContainer>
 
   )
 }
