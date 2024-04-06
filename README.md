@@ -23,3 +23,4 @@ Next week goal :
 Update Week 1 Month 2 (4/7/2024)
 - Commit took too long, the commit message "message" is pure unintentional, it supposed to be "wtf commit takes so long???"
 - Add how to slider (Unfinished : Slide 2 and slide 3 Image, How to slider suppose to pop after first user sign up, not user sign in)
+- Edit Authentication.js 's logo and backgroundImage require path : No longer require Windows path but relative path now (yeh sorry im an idiot)
