@@ -1,9 +1,5 @@
 
-import {StyleSheet, Text, View} from 'react-native';
-import SignInScreen from './.vscode/screen/SignInScreen/SignInScreen';
-import SignUpScreen from './.vscode/screen/SignUpScreen/SignUpScreen';
-import ResetPasswordScreen from './.vscode/screen/ResetPasswordScreen/ResetPasswordScreen';
-import EmailConFirmScreen from './.vscode/screen/EmailConfirmScreen/EmailConFirmScreen';
+import {StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthenticationScreen from './.vscode/screen/AuthenticationScreen/AuthenticationScreen';

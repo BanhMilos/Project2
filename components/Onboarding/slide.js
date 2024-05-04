@@ -10,12 +10,12 @@ export default [
         id : '2',
         title : 'Cooking recipes',
         description : 'Search for a recipe by tag. We also suggest recipe based on Food reconizing result and your profile ',
-        image : require("../../assets/welcome-image.png")
+        image : require("../../assets/slide2.png")
     },
     {
         id : '3',
         title : 'User\'s custom list',
         description : 'Keep a list of favourite food or meal to yourself',
-        image : require("../../assets/welcome-image.png")
+        image : require("../../assets/slide3.jpg")
     },
 ]

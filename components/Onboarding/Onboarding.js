@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, Animated } from 'react-native'
+import { View, FlatList, StyleSheet, Animated } from 'react-native'
 import React, { useRef, useState } from 'react'
 import slide from './slide';
 import OnboardingItem from './OnboardingItem';

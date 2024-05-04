@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { ImageBackground, StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import CustomButton from '../../../components/CustomButton';
 import CustomInput from '../../../components/CustomInput';
