@@ -26,7 +26,6 @@ function AuthenticationScreen() {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user.email + " signed in");
       })
       .catch((error) => alert(error.message));
   };
@@ -175,7 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F4F4F3",
     alignItems: "center",
     width: "100%",
-    height: 400,
+    height: 370,
     paddingHorizontal: 30,
     paddingTop: 30,
     borderWidth: 0.5,

@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import ImageHolder from "../components/ImageHolder";
 
 const ImageScreen = () => {
   const [image, setImage] = useState();
@@ -17,6 +16,12 @@ const ImageScreen = () => {
       if (!res.canceled) {
         await saveImage(res);
         console.log(res.uri);
+        var data = new FormData();
+        data.append("my_photo", {
+          uri: res.uri, // your file path string
+          name: "my_photo.jpg",
+          type: "image/jpg",
+        });
       }
     } catch (error) {
       alert("smthing wrong");
@@ -35,9 +40,7 @@ const ImageScreen = () => {
         style={{ flex: 0.5, marginBottom: 10 }}
         source={
           !image
-            ? {
-                uri: "https://cdn.pixabay.com/photo/2023/01/03/16/00/dog-7694676_640.jpg",
-              }
+            ? require("../../assets/logo.png")
             : {
                 uri: image.uri,
               }

@@ -36,11 +36,11 @@ export const categories = [
 
 export const recipeList = [
   {
-    id: "01",
+    id: "01", //primary key
     name: "Tuna Tartare",
     image: require("../assets/images/tuna.png"),
     rating: "4.2",
-    ingredients: ["Fresh Tuna", "Lime Juice", "Red Onion", "Avocado"],
+    ingredients: ["Fresh Tuna", "Lime Juice", "Red Onion", "Avocado"], // 1 - N  (ingredient : name)
     time: "40 mins",
     difficulty: "Medium",
     calories: "420 cal",
@@ -54,7 +54,8 @@ export const recipeList = [
       "Drizzle lime juice over the mixture and gently toss.",
       "Serve chilled and enjoy!",
     ],
-    categories: "Low Calorie",
+    //
+    categories: "Low Calorie", // 1 - N  (category : title)
   },
   {
     id: "02",
