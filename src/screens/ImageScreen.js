@@ -16,15 +16,26 @@ const ImageScreen = () => {
       if (!res.canceled) {
         await saveImage(res);
         console.log(res.uri);
+        ////////////
         var data = new FormData();
         data.append("my_photo", {
           uri: res.uri, // your file path string
           name: "my_photo.jpg",
           type: "image/jpg",
         });
+        console.log(sendData);
+        const response = await fetch("http://0.0.0.0:8000/predict/", {
+          method: "post",
+          body: data,
+        });
+        console.log("2");
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+        //////////
       }
     } catch (error) {
-      alert("smthing wrong");
+      alert("fuck");
     }
   };
   const saveImage = async (image) => {
