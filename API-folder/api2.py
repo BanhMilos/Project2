@@ -23,9 +23,9 @@ def model_prediction(image, model):
     return np.argmax(predictions)
 
 @app.post("/predict/")
-async def predict(image_file: UploadFile = File(...)):
+async def predict(file: UploadFile):
     try:
-        contents = await image_file.read()
+        contents = await file.read()
         image = Image.open(io.BytesIO(contents))  
         result_index = model_prediction(image, model)
         return {"prediction": labels[result_index]}

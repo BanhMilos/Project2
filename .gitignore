@@ -33,3 +33,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+API-folder/testapi2.py
+API-folder/testapi.py
