@@ -13,7 +13,6 @@ import { FontAwesome } from "@expo/vector-icons";
 
 const RecipeDetailsScreen = ({ navigation, route }) => {
   const { item } = route.params;
-  console.log(item);
   return (
     <View style={{ backgroundColor: item.color, flex: 1 }}>
       <SafeAreaView style={{ flexDirection: "row", marginHorizontal: 16 }}>
@@ -45,7 +44,7 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
           }}
         >
           <Image
-            source={item.image}
+            source={{ uri: item.imageUrl }}
             style={{
               width: "100%",
               height: "100%",

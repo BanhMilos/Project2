@@ -5,19 +5,38 @@ import {
   View,
   Image,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { categories, colors, recipeList } from "../Constant";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { db } from "../../firebase";
 
 const RecipeCard = ({ category }) => {
+  //fetch data from firestore
   const navigation = useNavigation();
-  const [data, setData] = useState(recipeList);
+  const [loading, setLoading] = useState(true);
+  const [recipes, setRecipes] = useState([]);
+  useEffect(() => {
+    const recipe = db.collection("Recipe").onSnapshot((querySnapshot) => {
+      const recipes = [];
+      querySnapshot.forEach((documentSnapshot) => {
+        recipes.push({
+          ...documentSnapshot.data(),
+        });
+      });
+      setRecipes(recipes);
+      setLoading(false);
+    });
+    return () => recipe();
+  }, []);
+  if (loading) return <ActivityIndicator />;
   const filteredData =
     category == "all"
-      ? data
-      : data.filter((item) => item.categories == category);
+      ? recipes
+      : recipes.filter((item) => item.categories.includes(category));
+  /////////////////
   return (
     <View>
       <FlatList
@@ -40,7 +59,9 @@ const RecipeCard = ({ category }) => {
             }}
           >
             <Image
-              source={item.image}
+              source={{
+                uri: item.imageUrl,
+              }}
               style={{ width: 150, height: 150, resizeMode: "center" }}
             />
             <Text>{item.name}</Text>

@@ -14,10 +14,10 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Image" component={ImageScreen} />
-        <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="RecipeList" component={RecipeListScreen} />
         <Stack.Screen name="RecipeDetail" component={RecipeDetailsScreen} />
+        <Stack.Screen name="Image" component={ImageScreen} />
+        <Stack.Screen name="Onboarding" component={Onboarding} />
       </Stack.Navigator>
     </NavigationContainer>
   );
