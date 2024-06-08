@@ -15,16 +15,26 @@ const ImageScreen = () => {
       });
       if (!res.canceled) {
         await saveImage(res);
-        console.log(res.uri);
         var data = new FormData();
-        data.append("my_photo", {
-          uri: res.uri, // your file path string
-          name: "my_photo.jpg",
+        data.append("file", {
+          uri: res.uri,
+          name: "file.jpg",
           type: "image/jpg",
         });
+
+        const response = await fetch("http://172.20.10.2:8000/predict/", {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+          method: "post",
+          body: data,
+        });
+        const respondData = await response.json();
+        console.log(respondData);
       }
     } catch (error) {
-      alert("smthing wrong");
+      alert(error);
     }
   };
   const saveImage = async (image) => {
