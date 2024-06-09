@@ -19,7 +19,7 @@ const RecipeCard = ({ category }) => {
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
   useEffect(() => {
-    const recipe = db.collection("Recipe").onSnapshot((querySnapshot) => {
+    const list = db.collection("Recipe").onSnapshot((querySnapshot) => {
       const recipes = [];
       querySnapshot.forEach((documentSnapshot) => {
         recipes.push({
@@ -29,7 +29,7 @@ const RecipeCard = ({ category }) => {
       setRecipes(recipes);
       setLoading(false);
     });
-    return () => recipe();
+    return () => list();
   }, []);
   if (loading) return <ActivityIndicator />;
   const filteredData =
