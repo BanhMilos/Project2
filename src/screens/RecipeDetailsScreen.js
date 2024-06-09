@@ -5,7 +5,6 @@ import {
   Text,
   View,
   Pressable,
-  Dimensions,
   ScrollView,
 } from "react-native";
 import React from "react";
@@ -35,9 +34,10 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
       >
         <View
           style={{
-            // backgroundColor: "red",
+            //backgroundColor: "red",
             height: 300,
             width: 300,
+            borderRadius: 300,
             position: "absolute",
             top: -150,
             // marginBottom: 130,

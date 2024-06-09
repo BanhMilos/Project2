@@ -1,8 +1,18 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const ImageScreen = () => {
+  const navigation = useNavigation();
   const [image, setImage] = useState();
   const uploadImage = async () => {
     try {
@@ -56,6 +66,12 @@ const ImageScreen = () => {
               }
         }
       />
+      <Pressable
+        style={{ position: "absolute", marginLeft: 15, marginTop: 35 }}
+        onPress={() => navigation.goBack()}
+      >
+        <FontAwesome name={"arrow-circle-left"} size={28} color="white" />
+      </Pressable>
       <TouchableOpacity style={styles.button} onPress={() => uploadImage()}>
         <Text style={{ fontSize: 15 }}> Capturing </Text>
       </TouchableOpacity>
