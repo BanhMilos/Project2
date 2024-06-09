@@ -1,49 +1,26 @@
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import React, { useState, useRef } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { db } from "../../firebase";
-import { query } from "firebase/database";
-import { DocumentSnapshot } from "firebase/firestore";
 
-const SearchFilter = ({ icon, placeholder, onSearch }) => {
+const SearchFilter = ({ icon, placeholder, onSearch, onFocus }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [ingredients, setIngredients] = useState([]);
-  const [focus, setFocus] = useState(false);
   const textInputRef = useRef(null);
   const focusTextInput = () => {
     if (textInputRef.current) {
       textInputRef.current.focus();
-      setFocus(true);
+      if (searchQuery) onFocus(true);
     }
   };
   const handleSearch = (query) => {
     setSearchQuery(query);
+    query.trim() != "" ? onFocus(true) : onFocus(false);
     onSearch(query);
   };
+
   const clearSearchQuery = () => {
     setSearchQuery("");
+    onFocus(false);
   };
-  useEffect(() => {
-    const list = db.collection("Ingredient").onSnapshot((querySnapshot) => {
-      const ingredients = [];
-      querySnapshot.forEach((documentSnapshot) => {
-        ingredients.push({
-          ...documentSnapshot.data(),
-        });
-      });
-      setIngredients(ingredients);
-      setLoading(false);
-    });
-    return () => list();
-  }, []);
-  if (loading) return <ActivityIndicator />;
   return (
     <TouchableOpacity
       style={{
@@ -53,7 +30,6 @@ const SearchFilter = ({ icon, placeholder, onSearch }) => {
         borderRadius: 8,
         paddingHorizontal: 16,
         marginVertical: 16,
-
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
@@ -70,6 +46,9 @@ const SearchFilter = ({ icon, placeholder, onSearch }) => {
         value={searchQuery}
         onChangeText={(query) => handleSearch(query)}
         ref={textInputRef}
+        onPressIn={() => {
+          if (searchQuery) onFocus(true);
+        }}
       />
       {searchQuery ? (
         <TouchableOpacity onPress={clearSearchQuery} style={{ marginLeft: 10 }}>

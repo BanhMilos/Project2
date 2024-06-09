@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { categories, colors, recipeList } from "../Constant";
+import { categories, colors } from "../Constant";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../../firebase";

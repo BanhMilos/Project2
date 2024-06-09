@@ -14,6 +14,7 @@ import CategoriesFilter from "../components/CategoriesFilter";
 import RecipeCard from "../components/RecipeCard";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import IngredientsList from "../components/IngredientsList";
 
 const RecipeListScreen = () => {
   const [category, setCategory] = useState("all");
@@ -28,14 +29,16 @@ const RecipeListScreen = () => {
   };
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
-    setListVisible(true);
+  };
+  const handleFocus = (isFocus) => {
+    setListVisible(isFocus);
   };
   const handlePress = () => {
     Keyboard.dismiss();
     setListVisible(false);
   };
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
+    <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
       <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
         {/* render header */}
         <Header headerText={"Hello there "} headerIcon={"bell-o"} />
@@ -45,8 +48,9 @@ const RecipeListScreen = () => {
           icon="search"
           placeholder={"enter your fav recipe"}
           onSearch={handleSearch}
+          onFocus={handleFocus}
         />
-
+        <IngredientsList searchQuery={searchQuery} visible={listVisible} />
         {/* Categories filter */}
 
         <View style={{ marginTop: 5 }}>

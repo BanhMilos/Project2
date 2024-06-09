@@ -7,6 +7,7 @@ import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 import AuthenticationScreen from "../screens/AuthenticationScreen";
 import Onboarding from "../components/Onboarding/Onboarding";
 import ImageScreen from "../screens/ImageScreen";
+import IngredientDetailsScreen from "../screens/IngredientDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
@@ -16,6 +17,10 @@ const AppNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="RecipeList" component={RecipeListScreen} />
         <Stack.Screen name="RecipeDetail" component={RecipeDetailsScreen} />
+        <Stack.Screen
+          name="IngredientDetails"
+          component={IngredientDetailsScreen}
+        />
         <Stack.Screen name="Image" component={ImageScreen} />
         <Stack.Screen name="Onboarding" component={Onboarding} />
       </Stack.Navigator>
