@@ -32,10 +32,19 @@ const RecipeCard = ({ category }) => {
     return () => list();
   }, []);
   if (loading) return <ActivityIndicator />;
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 1; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    console.log("called");
+    return array;
+  };
+  const shuffleRecipes = recipes;
   const filteredData =
     category == "all"
-      ? recipes
-      : recipes.filter((item) => item.categories.includes(category));
+      ? shuffleRecipes
+      : shuffleRecipes.filter((item) => item.categories.includes(category));
   /////////////////
   return (
     <View>

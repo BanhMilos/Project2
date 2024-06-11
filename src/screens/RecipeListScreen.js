@@ -7,19 +7,21 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import SearchFilter from "../components/SearchFilter";
 import CategoriesFilter from "../components/CategoriesFilter";
 import RecipeCard from "../components/RecipeCard";
 import { Feather } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import IngredientsList from "../components/IngredientsList";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { db } from "../../firebase";
 
 const RecipeListScreen = () => {
+  const route = useRoute();
+  const { uid } = route.params;
+  console.log(uid);
+  const [userData, setUserData] = useState(null);
   const [category, setCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [listVisible, setListVisible] = useState("false");
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
   };
@@ -27,30 +29,36 @@ const RecipeListScreen = () => {
   const handleCameraPress = () => {
     navigation.navigate("Image");
   };
+  const handleListPress = () => {
+    navigation.navigate("IngredientList");
+  };
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
   };
-  const handleFocus = (isFocus) => {
-    setListVisible(isFocus);
-  };
   const handlePress = () => {
     Keyboard.dismiss();
-    setListVisible(false);
   };
+  /*useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userDoc = await db.collection("User").doc(user.uid).get();
+        if (userDoc.exists) {
+          console.log(userDoc);
+        } else {
+          console.log("no have");
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+    fetchUserData();
+  }, [user.uid]);*/
   return (
     <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
       <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
         {/* render header */}
-        <Header headerText={"Hello there "} headerIcon={"bell-o"} />
+        <Header headerText={"Hello there"} headerIcon={"user-o"} />
 
-        {/* Search Filter */}
-        <SearchFilter
-          icon="search"
-          placeholder={"enter your fav recipe"}
-          onSearch={handleSearch}
-          onFocus={handleFocus}
-        />
-        <IngredientsList searchQuery={searchQuery} visible={listVisible} />
         {/* Categories filter */}
 
         <View style={{ marginTop: 5 }}>
@@ -78,7 +86,7 @@ const RecipeListScreen = () => {
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 style={{ marginRight: 15 }}
-                onPress={handleCameraPress}
+                onPress={handleListPress}
               >
                 <Feather name="list" size={25} color={"tomato"} />
               </TouchableOpacity>

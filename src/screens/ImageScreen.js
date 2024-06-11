@@ -67,7 +67,7 @@ const ImageScreen = () => {
         }
       />
       <Pressable
-        style={{ position: "absolute", marginLeft: 15, marginTop: 35 }}
+        style={{ position: "absolute", marginLeft: 15, marginTop: 42 }}
         onPress={() => navigation.goBack()}
       >
         <FontAwesome name={"arrow-circle-left"} size={28} color="white" />
