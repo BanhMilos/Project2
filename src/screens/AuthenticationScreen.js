@@ -42,7 +42,7 @@ function AuthenticationScreen() {
         password
       );
       const user = userCredentials.user;
-      console.log(user.email + " sign in");
+      console.log(user.uid + " sign in");
     } catch (error) {
       alert(error.message);
     }
@@ -65,10 +65,11 @@ function AuthenticationScreen() {
       );
 
       const user = userCredentials.user;
-      console.log(user.email + " sign up");
+      console.log(user.uid + " sign up");
       await db.collection("User").doc(user.uid).set({
         email: email,
         username: username,
+        favList: [],
       });
     } catch (error) {
       alert(error.message);
@@ -101,7 +102,7 @@ function AuthenticationScreen() {
       onPress={() => {
         Keyboard.dismiss();
       }}
-      disabled={!loading}
+      disabled={loading}
     >
       <ImageBackground
         source={require("../../assets/images/welcome-image.png")}
@@ -113,7 +114,7 @@ function AuthenticationScreen() {
               top: Dimensions.get("screen").height / 2.5,
               alignSelf: "center",
               position: "absolute",
-              zIndex: 4,
+              zIndex: 2,
             }}
             size={"large"}
           />
@@ -132,25 +133,33 @@ function AuthenticationScreen() {
             placeholder={"Email"}
             value={email}
             setValue={(text) => setEmail(text)}
+            isDisabled={loading}
           />
           <CustomInput
             placeholder="Password"
             value={password}
             setValue={(text) => setPassword(text)}
             secureTextEntry={true}
+            isDisabled={loading}
           />
           <CustomInput
             placeholder="Confirm password"
             value={confirmPassword}
             setValue={(text) => setConfirmPassword(text)}
             secureTextEntry={true}
+            isDisabled={loading}
           />
           <CustomInput
             placeholder="Username"
             value={username}
             setValue={(text) => setUsername(text)}
+            isDisabled={loading}
           />
-          <CustomButton text="Sign up" onPress={handleSignUp} />
+          <CustomButton
+            text="Sign up"
+            onPress={handleSignUp}
+            isDisabled={loading}
+          />
           <View
             style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
           >
@@ -174,14 +183,24 @@ function AuthenticationScreen() {
           id="Sign in box"
           style={[styles.container, { display: SignInVisible }]}
         >
-          <CustomInput placeholder="Email" value={email} setValue={setEmail} />
+          <CustomInput
+            placeholder="Email"
+            value={email}
+            setValue={setEmail}
+            isDisabled={loading}
+          />
           <CustomInput
             placeholder="Password"
             value={password}
             setValue={setPassword}
             secureTextEntry={true}
+            isDisabled={loading}
           />
-          <CustomButton text="Sign in" onPress={handleSignIn} />
+          <CustomButton
+            text="Sign in"
+            onPress={handleSignIn}
+            isDisabled={loading}
+          />
           <Pressable onPress={onForgotPressed}>
             <Text
               style={{
@@ -190,6 +209,7 @@ function AuthenticationScreen() {
                 left: -90,
                 fontWeight: "bold",
               }}
+              isDisabled={loading}
             >
               {" "}
               Forgot password

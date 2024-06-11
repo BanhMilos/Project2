@@ -19,7 +19,6 @@ import { db } from "../../firebase";
 const RecipeListScreen = () => {
   const route = useRoute();
   const { uid } = route.params;
-  console.log(uid);
   const [userData, setUserData] = useState(null);
   const [category, setCategory] = useState("all");
   const handleCategoryChange = (newCategory) => {
@@ -30,7 +29,7 @@ const RecipeListScreen = () => {
     navigation.navigate("Image");
   };
   const handleListPress = () => {
-    navigation.navigate("IngredientList");
+    navigation.navigate("IngredientList", { favList: userData.favList });
   };
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
@@ -38,12 +37,12 @@ const RecipeListScreen = () => {
   const handlePress = () => {
     Keyboard.dismiss();
   };
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userDoc = await db.collection("User").doc(user.uid).get();
+        const userDoc = await db.collection("User").doc(uid).get();
         if (userDoc.exists) {
-          console.log(userDoc);
+          setUserData(userDoc.data());
         } else {
           console.log("no have");
         }
@@ -52,7 +51,7 @@ const RecipeListScreen = () => {
       }
     };
     fetchUserData();
-  }, [user.uid]);*/
+  }, [uid]);
   return (
     <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
       <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>

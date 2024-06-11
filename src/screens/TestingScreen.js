@@ -1,19 +1,42 @@
-import { ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  TextInput,
+  Touchable,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 
 const TestingScreen = () => {
   const screenDimension = Dimensions.get("screen");
   const screenHeight = screenDimension.height;
-  return <ActivityIndicator style={styles.load} size={"large"} />;
+  return (
+    <View style={styles.load}>
+      <TouchableOpacity
+        style={styles.load2}
+        disabled={true}
+        onPress={() => {
+          console.log("touched");
+        }}
+      >
+        <TextInput> what the fuck</TextInput>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 export default TestingScreen;
 
 const styles = StyleSheet.create({
   load: {
-    position: "absolute",
-    color: "red",
-    top: Dimensions.get("screen").height / 2,
-    alignSelf: "center",
+    flex: 1,
+  },
+  load2: {
+    backgroundColor: "tomato",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
   },
 });

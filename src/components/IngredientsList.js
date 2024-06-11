@@ -12,10 +12,15 @@ import { colors } from "../Constant";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const IngredientsList = ({ searchQuery }) => {
+const IngredientsList = ({ searchQuery, favourited, handleFav }) => {
   const [loading, setLoading] = useState(true);
   const [ingredients, setIngredients] = useState([]);
+  const [added, setAdded] = useState(false);
   const navigation = useNavigation();
+  const handleAdd = () => {
+    setAdded(!added);
+    console.log(added);
+  };
   useEffect(() => {
     const list = db.collection("Ingredient").onSnapshot((querySnapshot) => {
       const ingredients = [];
@@ -89,13 +94,28 @@ const IngredientsList = ({ searchQuery }) => {
             <View
               style={{ zIndex: 2, flexDirection: "row", alignItems: "center" }}
             >
-              <Ionicons name="information" size={25} color={"tomato"} />
-              <FontAwesome
-                name="heart"
-                color={"tomato"}
-                style={{ marginHorizontal: 4 }}
-                size={15}
-              />
+              {/* Information Button*/}
+              <Pressable onPress={handleAdd}>
+                <Ionicons
+                  name={added ? "remove" : "add"}
+                  size={25}
+                  color={"tomato"}
+                />
+              </Pressable>
+
+              {/* Favourite Button */}
+              <Pressable
+                onPress={() => {
+                  console.log("fav");
+                }}
+              >
+                <FontAwesome
+                  name="heart"
+                  color={"tomato"}
+                  style={{ marginHorizontal: 4, zIndex: 2 }}
+                  size={15}
+                />
+              </Pressable>
             </View>
           </Pressable>
         )}

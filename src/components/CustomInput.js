@@ -1,18 +1,27 @@
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
 
-const CustomInput = ({ value, setValue, placeholder, secureTextEntry }) => {
+const CustomInput = ({
+  value,
+  setValue,
+  placeholder,
+  secureTextEntry,
+  isDisabled,
+}) => {
   const textInputRef = useRef(null);
   const focusTextInput = () => {
     if (textInputRef.current) {
       textInputRef.current.focus();
     }
+    console.log("touched");
   };
+  console.log(placeholder + " " + isDisabled);
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={focusTextInput}
       activeOpacity={0.7}
+      disabled={isDisabled}
     >
       <TextInput
         value={value}
@@ -42,6 +51,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
+    zIndex: 1,
   },
 });
 

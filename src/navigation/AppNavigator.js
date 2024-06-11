@@ -14,7 +14,7 @@ import TestingScreen from "../screens/TestingScreen";
 const Stack = createNativeStackNavigator();
 /*
 <Stack.Screen name="Test" component={TestingScreen} />
-*/
+ */
 const AppNavigator = () => {
   return (
     <NavigationContainer>

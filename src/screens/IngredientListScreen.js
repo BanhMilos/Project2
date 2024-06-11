@@ -8,12 +8,15 @@ import {
 import React, { useState } from "react";
 import Header from "../components/Header";
 import SearchFilter from "../components/SearchFilter";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import IngredientsList from "../components/IngredientsList";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 
 const IngredientsListScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const route = useRoute();
+  const { favList } = route.params;
+  console.log(favList);
   const navigation = useNavigation();
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
