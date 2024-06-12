@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 
 const ImageHolder = ({ uri }) => {

@@ -10,7 +10,7 @@ import Header from "../components/Header";
 import SearchFilter from "../components/SearchFilter";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import IngredientsList from "../components/IngredientsList";
-import { Feather, FontAwesome } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const IngredientsListScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");

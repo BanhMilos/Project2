@@ -29,13 +29,6 @@ function AuthenticationScreen() {
   const handleSignIn = async () => {
     Keyboard.dismiss();
     setLoading(true);
-    /*auth
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log("signed in");
-      })
-      .catch((error) => alert(error.message));*/
     try {
       const userCredentials = await auth.signInWithEmailAndPassword(
         email,
@@ -74,13 +67,6 @@ function AuthenticationScreen() {
     } catch (error) {
       alert(error.message);
     }
-    /*auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user.email);
-      })
-      .catch((error) => alert(error.message));*/
     setLoading(false);
   };
   const onSignInSwitch = () => {
