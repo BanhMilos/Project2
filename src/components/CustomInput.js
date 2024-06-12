@@ -13,9 +13,7 @@ const CustomInput = ({
     if (textInputRef.current) {
       textInputRef.current.focus();
     }
-    console.log("touched");
   };
-  console.log(placeholder + " " + isDisabled);
   return (
     <TouchableOpacity
       style={styles.container}
@@ -30,6 +28,7 @@ const CustomInput = ({
         style={styles.input}
         secureTextEntry={secureTextEntry}
         ref={textInputRef}
+        editable={!isDisabled}
       />
     </TouchableOpacity>
   );
