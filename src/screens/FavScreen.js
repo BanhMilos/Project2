@@ -5,18 +5,20 @@ import {
   Keyboard,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import SearchFilter from "../components/SearchFilter";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import IngredientsList from "../components/IngredientsList";
 import { Feather, FontAwesome } from "@expo/vector-icons";
+import { db } from "../../firebase";
 
 const FavScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
   const route = useRoute();
-  const { favList } = route.params;
-  console.log(favList);
+  const { uid } = route.params;
   const navigation = useNavigation();
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
@@ -24,6 +26,19 @@ const FavScreen = () => {
   const handlePress = () => {
     Keyboard.dismiss();
   };
+  useEffect(() => {
+    const fetchFavList = async () => {
+      try {
+        const docRef = await db.collection("User").doc(uid).get();
+        const favList = await docRef.get("favList");
+        setList(favList);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+    fetchFavList();
+    setLoading(false);
+  }, []);
   return (
     <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
       <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>

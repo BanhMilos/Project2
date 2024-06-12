@@ -15,8 +15,7 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 const IngredientsListScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const route = useRoute();
-  const { favList } = route.params;
-  console.log(favList);
+  const { uid } = route.params;
   const navigation = useNavigation();
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);

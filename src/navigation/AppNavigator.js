@@ -10,6 +10,7 @@ import ImageScreen from "../screens/ImageScreen";
 import IngredientDetailsScreen from "../screens/IngredientDetailsScreen";
 import IngredientsListScreen from "../screens/IngredientListScreen";
 import TestingScreen from "../screens/TestingScreen";
+import FavScreen from "../screens/FavScreen";
 
 const Stack = createNativeStackNavigator();
 /*
@@ -26,6 +27,7 @@ const AppNavigator = () => {
           name="IngredientDetails"
           component={IngredientDetailsScreen}
         />
+        <Stack.Screen name="FavList" component={FavScreen} />
         <Stack.Screen name="IngredientList" component={IngredientsListScreen} />
         <Stack.Screen name="Image" component={ImageScreen} />
         <Stack.Screen name="Onboarding" component={Onboarding} />

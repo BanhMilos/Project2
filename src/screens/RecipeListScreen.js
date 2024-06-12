@@ -9,10 +9,9 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
-import SearchFilter from "../components/SearchFilter";
 import CategoriesFilter from "../components/CategoriesFilter";
 import RecipeCard from "../components/RecipeCard";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { db } from "../../firebase";
 
@@ -28,8 +27,11 @@ const RecipeListScreen = () => {
   const handleCameraPress = () => {
     navigation.navigate("Image");
   };
+  const handleFavPress = () => {
+    navigation.navigate("FavList", { uid: uid });
+  };
   const handleListPress = () => {
-    navigation.navigate("IngredientList", { favList: userData.favList });
+    navigation.navigate("IngredientList", { uid: uid });
   };
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
@@ -83,6 +85,12 @@ const RecipeListScreen = () => {
           >
             <Text style={{ fontSize: 22, fontWeight: "bold" }}>Recipes</Text>
             <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{ marginRight: 15 }}
+                onPress={handleFavPress}
+              >
+                <FontAwesome name="heart-o" size={25} color={"tomato"} />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={{ marginRight: 15 }}
                 onPress={handleListPress}
