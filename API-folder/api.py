@@ -11,7 +11,7 @@ app = FastAPI()
 
 ROBOFLOW_URL = "https://detect.roboflow.com/ingredients-detection-yolov8/2"
 API_KEY = "lcEI0XunFHQi0GNp7Ccv"
-CLASS_MAPPING_FILE = "Project2/API-folder/class_mapping.json"
+CLASS_MAPPING_FILE = "./class_mapping.json"
 
 def load_class_mapping(file_path):
     try:
@@ -47,7 +47,7 @@ async def process_image(file: UploadFile = File(...)):
         os.remove(temp_file_name)
 
         # check response
-        if response.status_code == 200:
+        if response.status_code == 200:     
             result = response.json()
             
             # lọc class
@@ -59,7 +59,7 @@ async def process_image(file: UploadFile = File(...)):
                 if class_name is not None:
                     class_names.append(class_name)
             
-            return JSONResponse(content={"Đã phát hiện: ": class_names})
+            return JSONResponse(content=class_names)
         else:
             raise HTTPException(status_code=response.status_code, detail=response.text)
     
