@@ -12,12 +12,15 @@ import { db } from "../../firebase";
 import { colors } from "../Constant";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 
-const FavList = ({ searchQuery, uid }) => {
+const FavList = ({ uid }) => {
   const [loading, setLoading] = useState(true);
   const [list, setList] = useState([]);
   const navigation = useNavigation();
-
+  const handleFav = (value, index) => {
+    if (value == true) setList(list.push());
+  };
   useEffect(() => {
     const fetchFavList = async () => {
       try {
@@ -42,9 +45,15 @@ const FavList = ({ searchQuery, uid }) => {
     <View>
       <FlatList
         data={list}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <Pressable
-            onPress={() => navigation.navigate("RecipeDetail", { item: item })}
+            onPress={() =>
+              navigation.navigate("RecipeDetail", {
+                item: item,
+                index: index,
+                handleFav: handleFav,
+              })
+            }
             style={{
               backgroundColor: colors.COLOR_LIGHT,
               shadowColor: "#000",

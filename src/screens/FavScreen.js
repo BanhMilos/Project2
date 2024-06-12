@@ -38,7 +38,6 @@ const FavScreen = () => {
           <Feather name={"chevron-left"} size={28} color="tomato" />
         </Pressable>
         <Header headerText={""} headerIcon={"user-o"} />
-
         <FavList searchQuery={searchQuery} uid={uid} />
       </SafeAreaView>
     </TouchableWithoutFeedback>

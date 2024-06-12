@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { categories, colors } from "../Constant";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { db } from "../../firebase";
 
 const RecipeCard = ({ category }) => {

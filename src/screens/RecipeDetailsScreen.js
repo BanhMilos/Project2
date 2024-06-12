@@ -7,19 +7,29 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 
 const RecipeDetailsScreen = ({ navigation, route }) => {
-  const { item } = route.params;
+  const { item, liked, handleFav, index } = route.params;
+  const [fav, setFav] = useState(liked);
+  const handleHeartPress = () => {
+    setFav(!fav);
+    handleFav(fav);
+  };
   return (
     <View style={{ backgroundColor: item.color, flex: 1 }}>
       <SafeAreaView style={{ flexDirection: "row", marginHorizontal: 16 }}>
         <Pressable style={{ flex: 1 }} onPress={() => navigation.goBack()}>
           <FontAwesome name={"arrow-circle-left"} size={28} color="white" />
         </Pressable>
-
-        <FontAwesome name={"heart-o"} size={28} color="white" />
+        <Pressable onPress={handleHeartPress}>
+          <FontAwesome
+            name={fav ? "heart" : "heart-o"}
+            size={28}
+            color="white"
+          />
+        </Pressable>
       </SafeAreaView>
       <View
         style={{
