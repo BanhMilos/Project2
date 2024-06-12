@@ -8,7 +8,3 @@ Project description :
   + Identification : Identify ingredients in captured/uploaded image
   + Recipes suggesting : Suggest recipes based on user preference or ingredient identified
 
--API folder:
-  + api.py : using url
-  + api2.py : using file
-  + To run api, change directory to this folder and run this in terminal: "uvicorn <api name>:app --host 0.0.0.0 --port 8000"

@@ -1,39 +1,71 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import requests
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.responses import JSONResponse
 from PIL import Image
-from io import BytesIO
-import tensorflow as tf
-import numpy as np
+import io
+import os
+import requests
+import tempfile
+import json
 
 app = FastAPI()
 
-#load model
-model = tf.keras.models.load_model("trained_model.h5")
+ROBOFLOW_URL = "https://detect.roboflow.com/ingredients-detection-yolov8/2"
+API_KEY = "lcEI0XunFHQi0GNp7Ccv"
+CLASS_MAPPING_FILE = "./class_mapping.json"
 
-#doc lable tu file txt
-with open("labels.txt") as f:
-    content = f.readlines()
-labels = [label.strip() for label in content]
-
-class ImageURL(BaseModel):
-    image_url: str
-
-def model_prediction(image, model):
-    image = image.resize((64, 64))
-    input_arr = tf.keras.preprocessing.image.img_to_array(image)
-    input_arr = np.array([input_arr])  # Convert single image to batch
-    predictions = model.predict(input_arr)
-    return np.argmax(predictions)  # Return index of max element
-
-@app.post("/predict/")
-async def predict(image_data: ImageURL):
+def load_class_mapping(file_path):
     try:
-        response = requests.get(image_data.image_url)
-        image = Image.open(BytesIO(response.content))
-        result_index = model_prediction(image, model)
-        return {"prediction": labels[result_index]}
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return json.load(file)
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Error processing image")
+        raise RuntimeError(f"Error loading class mapping: {str(e)}")
 
-# uvicorn api:app --host 0.0.0.0 --port 8000
+class_mapping = load_class_mapping(CLASS_MAPPING_FILE)
+
+@app.post("/process-image/")
+async def process_image(file: UploadFile = File(...)):
+    try:
+        contents = await file.read()
+        image = Image.open(io.BytesIO(contents))
+        
+        if image.mode != "RGB":
+            image = image.convert("RGB")
+        
+        # temp file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as temp_file:
+            image.save(temp_file, format='JPEG')
+            temp_file_name = temp_file.name
+        
+        # gửi ảnh
+        with open(temp_file_name, 'rb') as img:
+            response = requests.post(
+                ROBOFLOW_URL,
+                files={"file": img},
+                params={"api_key": API_KEY}
+            )
+                
+        os.remove(temp_file_name)
+
+        # check response
+        if response.status_code == 200:     
+            result = response.json()
+            
+            # lọc class
+            detections = result.get("predictions", [])
+            class_names = []
+            for detection in detections:
+                class_id = int(detection.get("class", None))
+                class_name = class_mapping.get(str(class_id))
+                if class_name is not None:
+                    class_names.append(class_name)
+            
+            return JSONResponse(content=class_names)
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
