@@ -1,59 +1,59 @@
 import {
-  FlatList,
   StyleSheet,
   Text,
   View,
-  Image,
-  Pressable,
   ActivityIndicator,
+  FlatList,
+  Pressable,
+  Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { categories, colors } from "../Constant";
-import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 import { db } from "../../firebase";
+import { colors } from "../Constant";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 
-const RecipeCard = ({ category }) => {
-  //fetch data from firestore
-  const navigation = useNavigation();
+const FavList = ({ uid }) => {
   const [loading, setLoading] = useState(true);
-  const [recipes, setRecipes] = useState([]);
-  useEffect(() => {
-    const list = db.collection("Recipe").onSnapshot((querySnapshot) => {
-      const recipes = [];
-      querySnapshot.forEach((documentSnapshot) => {
-        recipes.push({
-          ...documentSnapshot.data(),
-        });
-      });
-      setRecipes(recipes);
-      setLoading(false);
-    });
-    return () => list();
-  }, []);
-  if (loading) return <ActivityIndicator />;
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 1; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    console.log("called");
-    return array;
+  const [list, setList] = useState([]);
+  const navigation = useNavigation();
+  const handleFav = (value, index) => {
+    if (value == true) setList(list.push());
   };
-  const shuffleRecipes = recipes;
-  const filteredData =
-    category == "all"
-      ? shuffleRecipes
-      : shuffleRecipes.filter((item) => item.categories.includes(category));
-  /////////////////
+  useEffect(() => {
+    const fetchFavList = async () => {
+      try {
+        const list = [];
+        const docRef = await db.collection("User").doc(uid).get();
+        const favRefList = await docRef.get("favList");
+        for (const ref of favRefList) {
+          const snapShot = await ref.get();
+          list.push(snapShot.data());
+        }
+        setList(list);
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFavList();
+  }, []);
+  if (loading) return <ActivityIndicator size={"small"} />;
   return (
     <View>
       <FlatList
-        data={filteredData}
-        extraData={categories}
-        renderItem={({ item }) => (
+        data={list}
+        renderItem={({ item, index }) => (
           <Pressable
-            onPress={() => navigation.navigate("RecipeDetail", { item: item })}
+            onPress={() =>
+              navigation.navigate("RecipeDetail", {
+                item: item,
+                index: index,
+                handleFav: handleFav,
+              })
+            }
             style={{
               backgroundColor: colors.COLOR_LIGHT,
               shadowColor: "#000",
@@ -98,6 +98,6 @@ const RecipeCard = ({ category }) => {
   );
 };
 
-export default RecipeCard;
+export default FavList;
 
 const styles = StyleSheet.create({});
