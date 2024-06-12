@@ -6,11 +6,15 @@ import {
   View,
   Image,
   Pressable,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
 import { useState } from "react";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { useNavigation } from "@react-navigation/native";
 
 function AuthenticationScreen() {
@@ -21,13 +25,21 @@ function AuthenticationScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [SignInVisible, setSignInVisible] = useState("none");
   const [SignUpVisible, setSignUpVisible] = useState("flex");
-  const handleSignIn = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-      })
-      .catch((error) => alert(error.message));
+  const [loading, setLoading] = useState(false);
+  const handleSignIn = async () => {
+    Keyboard.dismiss();
+    setLoading(true);
+    try {
+      const userCredentials = await auth.signInWithEmailAndPassword(
+        email,
+        password
+      );
+      const user = userCredentials.user;
+      console.log(user.uid + " sign in");
+    } catch (error) {
+      alert(error.message);
+    }
+    setLoading(false);
   };
   const onForgotPressed = () => {
     console.log("forgot");
@@ -37,14 +49,25 @@ function AuthenticationScreen() {
     setSignInVisible("none");
     setSignUpVisible("flex");
   };
-  const handleSignUp = () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user.email);
-      })
-      .catch((error) => alert(error.message));
+  const handleSignUp = async () => {
+    setLoading(true);
+    try {
+      const userCredentials = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      const user = userCredentials.user;
+      console.log(user.uid + " sign up");
+      await db.collection("User").doc(user.uid).set({
+        email: email,
+        username: username,
+        favList: [],
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+    setLoading(false);
   };
   const onSignInSwitch = () => {
     console.log("sign in switched");
@@ -55,106 +78,147 @@ function AuthenticationScreen() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("Onboarding");
+        navigation.navigate("RecipeList", { uid: user.uid });
       }
     });
     return unsubscribe;
   });
   return (
-    <ImageBackground
-      source={require("../../assets/images/welcome-image.png")}
-      style={styles.background}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+      disabled={loading}
     >
-      <Image
-        style={styles.logo}
-        //source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/logo.png")}
-        source={require("../../assets/logo.png")}
-      />
-
-      <View
-        id="Sign up box"
-        style={[styles.container, { display: SignUpVisible }]}
+      <ImageBackground
+        source={require("../../assets/images/welcome-image.png")}
+        style={styles.background}
       >
-        <CustomInput
-          placeholder={"Email"}
-          value={email}
-          setValue={(text) => setEmail(text)}
+        {loading && (
+          <ActivityIndicator
+            style={{
+              top: Dimensions.get("screen").height / 2.5,
+              alignSelf: "center",
+              position: "absolute",
+              zIndex: 2,
+            }}
+            size={"large"}
+          />
+        )}
+        <Image
+          style={styles.logo}
+          //source={require("C:/Users/44886/OneDrive/Desktop/React Native/Project2/assets/logo.png")}
+          source={require("../../assets/logo.png")}
         />
-        <CustomInput
-          placeholder="Password"
-          value={password}
-          setValue={(text) => setPassword(text)}
-          secureTextEntry={true}
-        />
-        <CustomInput
-          placeholder="Confirm password"
-          value={confirmPassword}
-          setValue={(text) => setConfirmPassword(text)}
-          secureTextEntry={true}
-        />
-        <CustomInput
-          placeholder="Username"
-          value={username}
-          setValue={(text) => setUsername(text)}
-        />
-        <CustomButton text="Sign up" onPress={handleSignUp} />
-        <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}>
-          <Text style={{ marginVertical: 10 }}>
-            {" "}
-            Already have an account?
+
+        <View
+          id="Sign up box"
+          style={[styles.container, { display: SignUpVisible }]}
+        >
+          <CustomInput
+            placeholder={"Email"}
+            value={email}
+            setValue={(text) => setEmail(text)}
+            isDisabled={loading}
+          />
+          <CustomInput
+            placeholder="Password"
+            value={password}
+            setValue={(text) => setPassword(text)}
+            secureTextEntry={true}
+            isDisabled={loading}
+          />
+          <CustomInput
+            placeholder="Confirm password"
+            value={confirmPassword}
+            setValue={(text) => setConfirmPassword(text)}
+            secureTextEntry={true}
+            isDisabled={loading}
+          />
+          <CustomInput
+            placeholder="Username"
+            value={username}
+            setValue={(text) => setUsername(text)}
+            isDisabled={loading}
+          />
+          <CustomButton
+            text="Sign up"
+            onPress={handleSignUp}
+            isDisabled={loading}
+          />
+          <View
+            style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
+          >
+            <Text style={{ marginVertical: 10 }}>
+              {" "}
+              Already have an account?
+              <Text
+                style={{
+                  color: "#5A57E1",
+                  fontWeight: "bold",
+                }}
+                onPress={onSignInSwitch}
+              >
+                {" "}
+                Sign in
+              </Text>
+            </Text>
+          </View>
+        </View>
+        <View
+          id="Sign in box"
+          style={[styles.container, { display: SignInVisible }]}
+        >
+          <CustomInput
+            placeholder="Email"
+            value={email}
+            setValue={setEmail}
+            isDisabled={loading}
+          />
+          <CustomInput
+            placeholder="Password"
+            value={password}
+            setValue={setPassword}
+            secureTextEntry={true}
+            isDisabled={loading}
+          />
+          <CustomButton
+            text="Sign in"
+            onPress={handleSignIn}
+            isDisabled={loading}
+          />
+          <Pressable onPress={onForgotPressed}>
             <Text
               style={{
+                marginBottom: 10,
                 color: "#5A57E1",
+                left: -90,
                 fontWeight: "bold",
               }}
-              onPress={onSignInSwitch}
+              isDisabled={loading}
             >
               {" "}
-              Sign in
+              Forgot password
             </Text>
-          </Text>
-        </View>
-      </View>
-      <View
-        id="Sign in box"
-        style={[styles.container, { display: SignInVisible }]}
-      >
-        <CustomInput placeholder="Email" value={email} setValue={setEmail} />
-        <CustomInput
-          placeholder="Password"
-          value={password}
-          setValue={setPassword}
-          secureTextEntry={true}
-        />
-        <CustomButton text="Sign in" onPress={handleSignIn} />
-        <Pressable onPress={onForgotPressed}>
-          <Text
-            style={{
-              marginBottom: 10,
-              color: "#5A57E1",
-              left: -90,
-              fontWeight: "bold",
-            }}
+          </Pressable>
+          <View
+            style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}
           >
-            {" "}
-            Forgot password{" "}
-          </Text>
-        </Pressable>
-        <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}>
-          <Text style={{ marginVertical: 10 }}>
-            {" "}
-            Dont have an account?
-            <Text
-              style={{ color: "#5A57E1", fontWeight: "bold" }}
-              onPress={onSignUpSwitch}
-            >
+            <Text style={{ marginVertical: 10 }}>
               {" "}
-              Sign up
+              Dont have an account?
+              <Text
+                style={{ color: "#5A57E1", fontWeight: "bold" }}
+                onPress={onSignUpSwitch}
+              >
+                {" "}
+                Sign up
+              </Text>
             </Text>
-          </Text>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -178,7 +242,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingTop: 30,
     borderWidth: 0.5,
-    borderRadius: 10,
+    borderRadius: 25,
   },
 });
 

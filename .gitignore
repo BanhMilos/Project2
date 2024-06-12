@@ -35,3 +35,4 @@ yarn-error.*
 *.tsbuildinfo
 API-folder/testapi2.py
 API-folder/testapi.py
+src/screens/TestingScreen.js

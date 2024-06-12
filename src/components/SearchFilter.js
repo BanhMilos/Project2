@@ -2,24 +2,22 @@ import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useState, useRef } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 
-const SearchFilter = ({ icon, placeholder, onSearch, onFocus }) => {
+const SearchFilter = ({ icon, placeholder, onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const textInputRef = useRef(null);
   const focusTextInput = () => {
     if (textInputRef.current) {
       textInputRef.current.focus();
-      if (searchQuery) onFocus(true);
     }
   };
   const handleSearch = (query) => {
     setSearchQuery(query);
-    query.trim() != "" ? onFocus(true) : onFocus(false);
     onSearch(query);
   };
 
   const clearSearchQuery = () => {
     setSearchQuery("");
-    onFocus(false);
+    onSearch("");
   };
   return (
     <TouchableOpacity
@@ -46,9 +44,6 @@ const SearchFilter = ({ icon, placeholder, onSearch, onFocus }) => {
         value={searchQuery}
         onChangeText={(query) => handleSearch(query)}
         ref={textInputRef}
-        onPressIn={() => {
-          if (searchQuery) onFocus(true);
-        }}
       />
       {searchQuery ? (
         <TouchableOpacity onPress={clearSearchQuery} style={{ marginLeft: 10 }}>

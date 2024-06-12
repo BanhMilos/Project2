@@ -1,58 +1,40 @@
-const callback = (downloadProgress) => {
-  const progress =
-    downloadProgress.totalBytesWritten /
-    downloadProgress.totalBytesExpectedToWrite;
-  this.setState({
-    downloadProgress: progress,
-  });
+import {
+  Dimensions,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React from "react";
+
+const TestingScreen = () => {
+  const screenDimension = Dimensions.get("screen");
+  const screenHeight = screenDimension.height;
+  return (
+    <View style={styles.load}>
+      <TouchableOpacity
+        style={styles.load2}
+        disabled={true}
+        onPress={() => {
+          console.log("touched");
+        }}
+      >
+        <TextInput> what the fuck</TextInput>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
-const downloadResumable = FileSystem.createDownloadResumable(
-  "http://techslides.com/demos/sample-videos/small.mp4",
-  FileSystem.documentDirectory + "small.mp4",
-  {},
-  callback
-);
+export default TestingScreen;
 
-try {
-  const { uri } = await downloadResumable.downloadAsync();
-  console.log("Finished downloading to ", uri);
-} catch (e) {
-  console.error(e);
-}
-
-try {
-  await downloadResumable.pauseAsync();
-  console.log("Paused download operation, saving for future retrieval");
-  AsyncStorage.setItem(
-    "pausedDownload",
-    JSON.stringify(downloadResumable.savable())
-  );
-} catch (e) {
-  console.error(e);
-}
-
-try {
-  const { uri } = await downloadResumable.resumeAsync();
-  console.log("Finished downloading to ", uri);
-} catch (e) {
-  console.error(e);
-}
-
-//To resume a download across app restarts, assuming the DownloadResumable.savable() object was stored:
-const downloadSnapshotJson = await AsyncStorage.getItem("pausedDownload");
-const downloadSnapshot = JSON.parse(downloadSnapshotJson);
-const downloadResumable = new FileSystem.DownloadResumable(
-  downloadSnapshot.url,
-  downloadSnapshot.fileUri,
-  downloadSnapshot.options,
-  callback,
-  downloadSnapshot.resumeData
-);
-
-try {
-  const { uri } = await downloadResumable.resumeAsync();
-  console.log("Finished downloading to ", uri);
-} catch (e) {
-  console.error(e);
-}
+const styles = StyleSheet.create({
+  load: {
+    flex: 1,
+  },
+  load2: {
+    backgroundColor: "tomato",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+});
