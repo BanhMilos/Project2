@@ -32,7 +32,7 @@ const ImageScreen = () => {
           type: "image/jpg",
         });
 
-        const response = await fetch("http://172.20.10.2:8000/predict/", {
+        const response = await fetch("http:/192.168.1.2:8000/process-image/", {
           headers: {
             Accept: "application/json",
             "Content-Type": "multipart/form-data",
