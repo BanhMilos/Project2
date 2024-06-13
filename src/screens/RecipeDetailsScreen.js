@@ -6,29 +6,72 @@ import {
   View,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { db } from "../../firebase";
 
 const RecipeDetailsScreen = ({ navigation, route }) => {
-  const { item, liked, handleFav, index } = route.params;
-  const [fav, setFav] = useState(liked);
-  const handleHeartPress = () => {
-    setFav(!fav);
-    handleFav(fav);
+  const { item, uid } = route.params;
+  const [fav, setFav] = useState(false);
+  const [favList, setFavList] = useState();
+  const [loading, setLoading] = useState(true);
+  const [heartLoading, setHeartLoading] = useState(false);
+  const handleHeartPress = async () => {
+    const index = favList.indexOf(item.id);
+    if (index > -1) {
+      favList.splice(index, 1);
+    } else {
+      favList.push(item.id);
+    }
+    setHeartLoading(true);
+    await db.collection("User").doc(uid).update({ favList });
+    setFav((fav) => !fav);
+    setHeartLoading(false);
   };
+  useEffect(() => {
+    const getFav = async () => {
+      try {
+        const userDoc = await db.collection("User").doc(uid).get();
+        const favList = userDoc.get("favList");
+        if (favList.includes(item.name)) setFav(true);
+        setFavList(favList);
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (uid) getFav();
+    console.log("RecipeDetailsScreen effect called");
+  }, [uid]);
+  if (loading)
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+
   return (
     <View style={{ backgroundColor: item.color, flex: 1 }}>
       <SafeAreaView style={{ flexDirection: "row", marginHorizontal: 16 }}>
         <Pressable style={{ flex: 1 }} onPress={() => navigation.goBack()}>
           <FontAwesome name={"arrow-circle-left"} size={28} color="white" />
         </Pressable>
-        <Pressable onPress={handleHeartPress}>
-          <FontAwesome
-            name={fav ? "heart" : "heart-o"}
-            size={28}
-            color="white"
-          />
+        <Pressable
+          onPress={handleHeartPress}
+          disabled={heartLoading}
+          style={{ alignItems: "center", justifyContent: "center" }}
+        >
+          {!heartLoading && (
+            <FontAwesome
+              name={fav ? "heart" : "heart-o"}
+              size={28}
+              color="white"
+            />
+          )}
+          {heartLoading && <ActivityIndicator />}
         </Pressable>
       </SafeAreaView>
       <View
@@ -45,20 +88,23 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
         <View
           style={{
             //backgroundColor: "red",
-            height: 300,
-            width: 300,
-            borderRadius: 300,
+            height: 280,
+            width: 280,
             position: "absolute",
             top: -150,
             // marginBottom: 130,
           }}
         >
           <Image
+            defaultSource={require("../../assets/loading.png")}
             source={{ uri: item.imageUrl }}
             style={{
               width: "100%",
               height: "100%",
               resizeMode: "contain",
+              borderRadius: 150,
+              borderWidth: 3,
+              borderColor: "gray",
             }}
           />
         </View>

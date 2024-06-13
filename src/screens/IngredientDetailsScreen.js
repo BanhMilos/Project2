@@ -18,14 +18,12 @@ const IngredientDetailsScreen = ({ navigation, route }) => {
       <SafeAreaView
         style={{
           flexDirection: "row",
-          marginHorizontal: 6,
+          marginHorizontal: 16,
         }}
       >
         <Pressable style={{ flex: 1 }} onPress={() => navigation.goBack()}>
           <FontAwesome name={"arrow-circle-left"} size={28} color="white" />
         </Pressable>
-
-        <FontAwesome name={"heart-o"} size={28} color="white" />
       </SafeAreaView>
       <View
         style={{
@@ -59,6 +57,7 @@ const IngredientDetailsScreen = ({ navigation, route }) => {
           }}
         >
           <Image
+            defaultSource={require("../../assets/loading.png")}
             source={{ uri: item.imageUrl }}
             style={{
               width: "100%",

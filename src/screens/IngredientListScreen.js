@@ -14,11 +14,24 @@ import { Feather } from "@expo/vector-icons";
 
 const IngredientsListScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [listName, setListName] = useState([]);
+  const navigation = useNavigation();
   const route = useRoute();
   const { uid } = route.params;
-  const navigation = useNavigation();
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
+  };
+  const handleAdd = (name) => {
+    const index = listName.indexOf(name);
+    let newList = listName;
+    if (index == -1) newList = [...listName, name];
+    else {
+      newList = listName.filter((item) => item !== name);
+    }
+    setListName(newList);
+  };
+  const handleCheck = () => {
+    navigation.navigate("Suggest", { listName: listName, uid: uid });
   };
   const handlePress = () => {
     Keyboard.dismiss();
@@ -38,7 +51,9 @@ const IngredientsListScreen = () => {
         >
           <Feather name={"chevron-left"} size={28} color="tomato" />
         </Pressable>
-        <Header headerText={""} headerIcon={"user-o"} />
+        <Pressable onPress={handleCheck}>
+          <Header headerText={""} headerIcon={"check"} />
+        </Pressable>
 
         {/* Search Filter */}
         <SearchFilter
@@ -46,7 +61,7 @@ const IngredientsListScreen = () => {
           placeholder={"enter your fav recipe"}
           onSearch={handleSearch}
         />
-        <IngredientsList searchQuery={searchQuery} />
+        <IngredientsList searchQuery={searchQuery} handleAdd={handleAdd} />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

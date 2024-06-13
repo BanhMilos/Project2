@@ -11,6 +11,7 @@ import Onboarding from "../components/onboarding/Onboarding";
 import IngredientsListScreen from "../screens/IngredientListScreen";
 import TestingScreen from "../screens/TestingScreen";
 import FavScreen from "../screens/FavScreen";
+import SuggestRecipe from "../screens/SuggestRecipe";
 
 const Stack = createNativeStackNavigator();
 /*
@@ -21,14 +22,15 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Authentication" component={AuthenticationScreen} />
-        <Stack.Screen name="RecipeList" component={RecipeListScreen} />
+        <Stack.Screen name="IngredientList" component={IngredientsListScreen} />
+        <Stack.Screen name="Suggest" component={SuggestRecipe} />
+        <Stack.Screen name="FavList" component={FavScreen} />
         <Stack.Screen name="RecipeDetail" component={RecipeDetailsScreen} />
+        <Stack.Screen name="RecipeList" component={RecipeListScreen} />
         <Stack.Screen
           name="IngredientDetails"
           component={IngredientDetailsScreen}
         />
-        <Stack.Screen name="FavList" component={FavScreen} />
-        <Stack.Screen name="IngredientList" component={IngredientsListScreen} />
         <Stack.Screen name="Image" component={ImageScreen} />
         <Stack.Screen name="Onboarding" component={Onboarding} />
       </Stack.Navigator>
