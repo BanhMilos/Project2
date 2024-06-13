@@ -12,24 +12,28 @@ import { colors } from "../Constant";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const IngredientsList = ({ searchQuery, favourited, handleFav }) => {
+const IngredientsList = ({ searchQuery, handleAdd }) => {
   const [loading, setLoading] = useState(true);
   const [ingredients, setIngredients] = useState([]);
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState();
   const navigation = useNavigation();
-  const handleAdd = () => {
-    setAdded(!added);
-    console.log(added);
+  const onAddPress = (index, name) => {
+    const newArray = [...added];
+    newArray[index] = !newArray[index];
+    setAdded(newArray);
+    handleAdd(name);
   };
   useEffect(() => {
     const list = db.collection("Ingredient").onSnapshot((querySnapshot) => {
       const ingredients = [];
       querySnapshot.forEach((documentSnapshot) => {
         ingredients.push({
+          selected: false,
           ...documentSnapshot.data(),
         });
       });
       setIngredients(ingredients);
+      setAdded(Array.from({ length: ingredients.length }, () => false));
       setLoading(false);
     });
     return () => list();
@@ -51,43 +55,56 @@ const IngredientsList = ({ searchQuery, favourited, handleFav }) => {
         zIndex: 2,
         backgroundColor: "#fff",
         flexDirection: "row",
-        paddingVertical: 0,
+        paddingVertical: 10,
         borderRadius: 8,
-        paddingHorizontal: 15,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
-        shadowRadius: 7,
+        shadowRadius: 10,
+        //paddingHorizontal: 15,
         //backgroundColor: "red",
       }}
     >
       <FlatList
         data={filteredData}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <Pressable
             onPress={() =>
               navigation.navigate("IngredientDetails", { item: item })
             }
             style={{
-              backgroundColor: colors.COLOR_LIGHT,
+              backgroundColor: added[index]
+                ? colors.COLOR_PRIMARY
+                : colors.COLOR_LIGHT,
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.1,
-              marginVertical: 5,
               alignItems: "center",
               flexDirection: "row",
               paddingVertical: 10,
               justifyContent: "space-between",
+              paddingHorizontal: 10,
             }}
           >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <FontAwesome
                 name="search"
                 color={"gray"}
                 style={{ marginLeft: 3 }}
               />
 
-              <Text style={{ fontSize: 16, fontWeight: "300" }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "300",
+                  color: added[index] ? colors.COLOR_LIGHT : colors.COLOR_DARK,
+                }}
+              >
                 {" " + item.name}
               </Text>
             </View>
@@ -95,11 +112,13 @@ const IngredientsList = ({ searchQuery, favourited, handleFav }) => {
               style={{ zIndex: 2, flexDirection: "row", alignItems: "center" }}
             >
               {/* Information Button*/}
-              <Pressable onPress={handleAdd}>
+              <Pressable onPress={() => onAddPress(index, item.name)}>
                 <Ionicons
-                  name={added ? "remove" : "add"}
+                  name={added[index] ? "remove" : "add"}
                   size={25}
-                  color={"tomato"}
+                  color={
+                    added[index] ? colors.COLOR_LIGHT : colors.COLOR_PRIMARY
+                  }
                 />
               </Pressable>
             </View>

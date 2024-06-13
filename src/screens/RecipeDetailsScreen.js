@@ -18,7 +18,6 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
   const [favList, setFavList] = useState();
   const [loading, setLoading] = useState(true);
   const [heartLoading, setHeartLoading] = useState(false);
-  console.log("recipe card pressed : " + item.id);
   const handleHeartPress = async () => {
     const index = favList.indexOf(item.id);
     if (index > -1) {
@@ -28,7 +27,7 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
     }
     setHeartLoading(true);
     await db.collection("User").doc(uid).update({ favList });
-    setFav(!fav);
+    setFav((fav) => !fav);
     setHeartLoading(false);
   };
   useEffect(() => {
@@ -45,6 +44,7 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
       }
     };
     if (uid) getFav();
+    console.log("RecipeDetailsScreen effect called");
   }, [uid]);
   if (loading)
     return (

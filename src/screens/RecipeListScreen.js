@@ -18,7 +18,6 @@ import { db } from "../../firebase";
 const RecipeListScreen = () => {
   const route = useRoute();
   const { uid } = route.params;
-  const [userData, setUserData] = useState(null);
   const [category, setCategory] = useState("all");
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
@@ -33,37 +32,19 @@ const RecipeListScreen = () => {
   const handleListPress = () => {
     navigation.navigate("IngredientList", { uid: uid });
   };
-  const handleSearch = (searchFilterText) => {
-    setSearchQuery(searchFilterText);
-  };
   const handlePress = () => {
     Keyboard.dismiss();
   };
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userDoc = await db.collection("User").doc(uid).get();
-        if (userDoc.exists) {
-          setUserData(userDoc.data());
-        } else {
-          console.log("no have");
-        }
-      } catch (error) {
-        alert(error.message);
-      }
-    };
-    fetchUserData();
-  }, [uid]);
   return (
     <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
       <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
         {/* render header */}
-        <Header headerText={"Hello there"} headerIcon={"user-o"} />
+        <Header headerText={"Hello there "} headerIcon={"user-o"} />
 
         {/* Categories filter */}
 
         <View style={{ marginTop: 5 }}>
-          <Text style={{ fontSize: 22, fontWeight: "bold" }}>Categories</Text>
+          {/*<Text style={{ fontSize: 22, fontWeight: "bold" }}>Categories</Text>*/}
           {/* Categories list */}
           <CategoriesFilter onCategoryChange={handleCategoryChange} />
         </View>

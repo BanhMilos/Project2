@@ -51,8 +51,6 @@ const ImageScreen = () => {
           setDetect(respondData);
           fetchList(respondData);
         } else setDetect([]);
-        console.log(detect);
-        console.log(respondData);
       }
     } catch (error) {
       alert(error);
