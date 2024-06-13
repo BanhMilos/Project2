@@ -32,19 +32,11 @@ const RecipeCard = ({ category }) => {
     return () => list();
   }, []);
   if (loading) return <ActivityIndicator />;
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 1; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    console.log("called");
-    return array;
-  };
-  const shuffleRecipes = recipes;
+
   const filteredData =
     category == "all"
-      ? shuffleRecipes
-      : shuffleRecipes.filter((item) => item.categories.includes(category));
+      ? recipes
+      : recipes.filter((item) => item.categories.includes(category));
   /////////////////
   return (
     <View>
@@ -64,14 +56,21 @@ const RecipeCard = ({ category }) => {
               marginVertical: 16,
               alignItems: "center",
               paddingHorizontal: 8,
-              paddingVertical: 26,
+              paddingVertical: 15,
             }}
           >
             <Image
+              defaultSource={require("../../assets/loading.png")}
               source={{
                 uri: item.imageUrl,
               }}
-              style={{ width: 150, height: 150, resizeMode: "center" }}
+              style={{
+                width: 150,
+                height: 150,
+                resizeMode: "center",
+                marginBottom: 10,
+                borderRadius: 10,
+              }}
             />
             <Text>{item.name}</Text>
             <View style={{ flexDirection: "row", marginTop: 8 }}>

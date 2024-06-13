@@ -45,20 +45,23 @@ const RecipeDetailsScreen = ({ navigation, route }) => {
         <View
           style={{
             //backgroundColor: "red",
-            height: 300,
-            width: 300,
-            borderRadius: 300,
+            height: 280,
+            width: 280,
             position: "absolute",
             top: -150,
             // marginBottom: 130,
           }}
         >
           <Image
+            defaultSource={require("../../assets/loading.png")}
             source={{ uri: item.imageUrl }}
             style={{
               width: "100%",
               height: "100%",
               resizeMode: "contain",
+              borderRadius: 150,
+              borderWidth: 3,
+              borderColor: "gray",
             }}
           />
         </View>

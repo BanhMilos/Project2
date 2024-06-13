@@ -59,6 +59,7 @@ const IngredientDetailsScreen = ({ navigation, route }) => {
           }}
         >
           <Image
+            defaultSource={require("../../assets/loading.png")}
             source={{ uri: item.imageUrl }}
             style={{
               width: "100%",
