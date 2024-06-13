@@ -10,9 +10,8 @@ import {
 import React, { useState, useEffect } from "react";
 import { db } from "../../firebase";
 import { colors } from "../Constant";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 
 const FavList = ({ uid }) => {
   const [loading, setLoading] = useState(true);
@@ -25,11 +24,12 @@ const FavList = ({ uid }) => {
     const fetchFavList = async () => {
       try {
         const list = [];
-        const docRef = await db.collection("User").doc(uid).get();
-        const favRefList = await docRef.get("favList");
-        for (const ref of favRefList) {
-          const snapShot = await ref.get();
-          list.push(snapShot.data());
+        const userDoc = await db.collection("User").doc(uid).get();
+        const userList = userDoc.get("favList");
+        for (const id of userList) {
+          const doc = await db.collection("Recipe").doc(id).get();
+          list.push(doc.data());
+          console.log(id);
         }
         setList(list);
       } catch (error) {
@@ -39,7 +39,7 @@ const FavList = ({ uid }) => {
       }
     };
     fetchFavList();
-  }, []);
+  }, [uid]);
   if (loading) return <ActivityIndicator size={"small"} />;
   return (
     <View>

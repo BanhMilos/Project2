@@ -13,12 +13,13 @@ import * as ImagePicker from "expo-image-picker";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../../firebase";
-import { colors, recipeList } from "../Constant";
+import { colors } from "../Constant";
 
 const ImageScreen = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState();
   const [list, setList] = useState(null);
+  const [detect, setDetect] = useState(null);
   const uploadImage = async () => {
     try {
       await ImagePicker.requestCameraPermissionsAsync();
@@ -29,10 +30,10 @@ const ImageScreen = () => {
         quality: 1,
       });
       if (!res.canceled) {
-        await saveImage(res);
+        await saveImage(res.assets[0].uri);
         var data = new FormData();
         data.append("file", {
-          uri: res.uri,
+          uri: res.assets[0].uri,
           name: "file.jpg",
           type: "image/jpg",
         });
@@ -46,8 +47,12 @@ const ImageScreen = () => {
           body: data,
         });
         const respondData = await response.json();
+        if (Array.isArray(respondData) && respondData.length !== 0) {
+          setDetect(respondData);
+          fetchList(respondData);
+        } else setDetect([]);
+        console.log(detect);
         console.log(respondData);
-        fetchList(respondData);
       }
     } catch (error) {
       alert(error);
@@ -102,7 +107,7 @@ const ImageScreen = () => {
             !image
               ? require("../../assets/logo.png")
               : {
-                  uri: image.uri,
+                  uri: image,
                 }
           }
         />
@@ -113,7 +118,22 @@ const ImageScreen = () => {
       >
         <FontAwesome name={"arrow-circle-left"} size={28} color="white" />
       </Pressable>
-
+      {/* Ingredients List */}
+      {Array.isArray(detect) && detect.length === 0 && (
+        <Text style={styles.header}>Nothing detected</Text>
+      )}
+      {Array.isArray(detect) && detect.length !== 0 && (
+        <View>
+          <Text style={styles.header}>Detected ingredient(s):</Text>
+          <FlatList
+            data={detect}
+            renderItem={({ item }) => (
+              <Text style={styles.recipeName}>{item}</Text>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      )}
       {/* Recipe List*/}
       {list && (
         <FlatList

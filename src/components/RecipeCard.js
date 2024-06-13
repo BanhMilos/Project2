@@ -13,7 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { db } from "../../firebase";
 
-const RecipeCard = ({ category }) => {
+const RecipeCard = ({ category, uid }) => {
   //fetch data from firestore
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
@@ -23,6 +23,7 @@ const RecipeCard = ({ category }) => {
       const recipes = [];
       querySnapshot.forEach((documentSnapshot) => {
         recipes.push({
+          id: documentSnapshot.id,
           ...documentSnapshot.data(),
         });
       });
@@ -45,18 +46,20 @@ const RecipeCard = ({ category }) => {
         extraData={categories}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => navigation.navigate("RecipeDetail", { item: item })}
+            onPress={() =>
+              navigation.navigate("RecipeDetail", { item: item, uid: uid })
+            }
             style={{
               backgroundColor: colors.COLOR_LIGHT,
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.1,
               shadowRadius: 7,
-              borderRadius: 16,
               marginVertical: 16,
               alignItems: "center",
               paddingHorizontal: 8,
               paddingVertical: 15,
+              borderRadius: 16,
             }}
           >
             <Image

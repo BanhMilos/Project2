@@ -102,7 +102,7 @@ const RecipeListScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <RecipeCard category={category} />
+          <RecipeCard category={category} uid={uid} />
         </View>
 
         {/* Recipes list */}

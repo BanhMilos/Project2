@@ -102,20 +102,6 @@ const IngredientsList = ({ searchQuery, favourited, handleFav }) => {
                   color={"tomato"}
                 />
               </Pressable>
-
-              {/* Favourite Button */}
-              <Pressable
-                onPress={() => {
-                  console.log("fav");
-                }}
-              >
-                <FontAwesome
-                  name="heart"
-                  color={"tomato"}
-                  style={{ marginHorizontal: 4, zIndex: 2 }}
-                  size={15}
-                />
-              </Pressable>
             </View>
           </Pressable>
         )}

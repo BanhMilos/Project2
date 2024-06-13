@@ -5,17 +5,16 @@ import {
   Keyboard,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import SearchFilter from "../components/SearchFilter";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import IngredientsList from "../components/IngredientsList";
 import { Feather } from "@expo/vector-icons";
+import { db } from "../../firebase";
 
 const IngredientsListScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const route = useRoute();
-  const { uid } = route.params;
   const navigation = useNavigation();
   const handleSearch = (searchFilterText) => {
     setSearchQuery(searchFilterText);
