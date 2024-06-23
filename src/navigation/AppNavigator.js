@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -7,16 +7,13 @@ import RecipeDetailsScreen from "../screens/RecipeDetailsScreen";
 import AuthenticationScreen from "../screens/AuthenticationScreen";
 import ImageScreen from "../screens/ImageScreen";
 import IngredientDetailsScreen from "../screens/IngredientDetailsScreen";
-import Onboarding from "../components/onboarding/Onboarding";
+import Onboarding from "../components/Onboarding/Onboarding";
 import IngredientsListScreen from "../screens/IngredientListScreen";
-import TestingScreen from "../screens/TestingScreen";
 import FavScreen from "../screens/FavScreen";
 import SuggestRecipe from "../screens/SuggestRecipe";
 
 const Stack = createNativeStackNavigator();
-/*
-<Stack.Screen name="Test" component={TestingScreen} />
- */
+
 const AppNavigator = () => {
   return (
     <NavigationContainer>

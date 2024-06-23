@@ -1,5 +1,5 @@
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
+import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 const CustomInput = ({
   value,
@@ -9,11 +9,13 @@ const CustomInput = ({
   isDisabled,
 }) => {
   const textInputRef = useRef(null);
+
   const focusTextInput = () => {
     if (textInputRef.current) {
       textInputRef.current.focus();
     }
   };
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -29,6 +31,7 @@ const CustomInput = ({
         secureTextEntry={secureTextEntry}
         ref={textInputRef}
         editable={!isDisabled}
+        pointerEvents="none"
       />
     </TouchableOpacity>
   );
@@ -36,7 +39,6 @@ const CustomInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    //top : 80,
     backgroundColor: "white",
     width: "100%",
     borderColor: "gray",
@@ -44,13 +46,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     marginVertical: 3,
-    height: 50,
+    minHeight: 50,
     justifyContent: "center",
-    zIndex: 2,
   },
   input: {
     fontSize: 16,
     zIndex: 1,
+    pointerEvents: "auto",
   },
 });
 

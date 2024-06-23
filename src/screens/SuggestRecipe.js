@@ -13,19 +13,22 @@ import { FontAwesome, Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { db } from "../../firebase";
 import { colors } from "../Constant";
+
 const SuggestRecipe = () => {
   const [list, setList] = useState();
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const route = useRoute();
   const { listName, uid } = route.params;
+
   useEffect(() => {
     console.log(listName);
     fetchList(listName);
   }, []);
+
   const fetchList = async (ingredientList) => {
     try {
-      //Fetch tables contain documents that have ingredient in respond
+      // Fetch tables contain documents that have ingredient in respond
       const promise = ingredientList.map((ingredient) => {
         return db
           .collection("Recipe")
@@ -33,7 +36,7 @@ const SuggestRecipe = () => {
           .get();
       });
 
-      //Store unique documents id
+      // Store unique documents id
       const querySnapShots = await Promise.all(promise);
       const uniqueId = new Set();
       querySnapShots.forEach((querySnapShot) => {
@@ -42,22 +45,16 @@ const SuggestRecipe = () => {
         });
       });
 
-      //Fetch documents using id
+      // Fetch documents using id
       const fetchPromises = Array.from(uniqueId).map((id) => {
         return db.collection("Recipe").doc(id).get();
       });
 
-      //store data
+      // Store data
       const docSnapShots = await Promise.all(fetchPromises);
       const result = docSnapShots.map((snapshot) => {
         return snapshot.data();
       });
-      const filteredRes = Object.values(result).filter((res) =>
-        ingredientList.every((ingredient) =>
-          res.ingredients.includes(ingredient)
-        )
-      );
-      console.log(filteredRes);
       setList(result);
     } catch (error) {
       alert(error.message);
@@ -65,23 +62,15 @@ const SuggestRecipe = () => {
       setLoading(false);
     }
   };
+
   return (
     <View style={styles.container}>
-      <Pressable
-        style={{
-          flex: 1,
-          position: "absolute",
-          marginTop: 42,
-          zIndex: 2,
-          marginHorizontal: 16,
-        }}
-        onPress={() => navigation.goBack()}
-      >
+      <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
         <Feather name={"chevron-left"} size={28} color="tomato" />
       </Pressable>
       {/* Ingredients List */}
       {loading && (
-        <View style={{ flex: 1, justifyContent: "center" }}>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator size={"large"} />
         </View>
       )}
@@ -101,20 +90,14 @@ const SuggestRecipe = () => {
                   source={{
                     uri: item.imageUrl,
                   }}
-                  style={{
-                    width: 150,
-                    height: 150,
-                    resizeMode: "center",
-                    marginBottom: 10,
-                    borderRadius: 10,
-                  }}
+                  style={styles.recipeImage}
                 />
                 <Text>{item.name}</Text>
-                <View style={{ flexDirection: "row", marginTop: 8 }}>
+                <View style={styles.recipeInfo}>
                   <Text>{item.time}</Text>
                   <Text> | </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={{ marginRight: 4 }}>{item.rating}</Text>
+                  <View style={styles.rating}>
+                    <Text style={styles.ratingText}>{item.rating}</Text>
                     <FontAwesome
                       name="star"
                       size={16}
@@ -125,9 +108,7 @@ const SuggestRecipe = () => {
               </Pressable>
             )}
             numColumns={2}
-            columnWrapperStyle={{
-              justifyContent: "space-between",
-            }}
+            columnWrapperStyle={styles.columnWrapper}
             showsVerticalScrollIndicator={false}
           />
         </View>
@@ -141,6 +122,17 @@ export default SuggestRecipe;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backButton: {
+    flex: 1,
+    position: "absolute",
+    marginTop: 42,
+    zIndex: 2,
+    marginHorizontal: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
   },
   wrapper: {
     flex: 1,
@@ -158,5 +150,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 8,
     marginHorizontal: 20,
+  },
+  recipeImage: {
+    width: 150,
+    height: 150,
+    resizeMode: "center",
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  recipeInfo: {
+    flexDirection: "row",
+    marginTop: 8,
+  },
+  rating: {
+    flexDirection: "row",
+  },
+  ratingText: {
+    marginRight: 4,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
   },
 });

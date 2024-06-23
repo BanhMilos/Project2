@@ -7,73 +7,66 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import CategoriesFilter from "../components/CategoriesFilter";
 import RecipeCard from "../components/RecipeCard";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { db } from "../../firebase";
 
 const RecipeListScreen = () => {
   const route = useRoute();
   const { uid } = route.params;
   const [category, setCategory] = useState("all");
+
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
   };
+
   const navigation = useNavigation();
+
   const handleCameraPress = () => {
     navigation.navigate("Image");
   };
+
   const handleFavPress = () => {
     navigation.navigate("FavList", { uid: uid });
   };
+
   const handleListPress = () => {
     navigation.navigate("IngredientList", { uid: uid });
   };
+
   const handlePress = () => {
     Keyboard.dismiss();
   };
+
   return (
-    <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
-      <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
+    <TouchableWithoutFeedback onPress={handlePress} style={styles.touchable}>
+      <SafeAreaView style={styles.safeArea}>
         {/* render header */}
         <Header headerText={"Hello there "} headerIcon={"user-o"} />
 
         {/* Categories filter */}
-
-        <View style={{ marginTop: 5 }}>
-          {/*<Text style={{ fontSize: 22, fontWeight: "bold" }}>Categories</Text>*/}
+        <View style={styles.categoriesContainer}>
+          {/*<Text style={styles.categoriesTitle}>Categories</Text>*/}
           {/* Categories list */}
           <CategoriesFilter onCategoryChange={handleCategoryChange} />
         </View>
 
         {/* Recipe List Filter */}
-
-        <View
-          style={{
-            marginTop: 0,
-            flex: 1,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: 5,
-            }}
-          >
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>Recipes</Text>
-            <View style={{ flexDirection: "row" }}>
+        <View style={styles.recipeListContainer}>
+          <View style={styles.recipeListHeader}>
+            <Text style={styles.recipeListTitle}>Recipes</Text>
+            <View style={styles.recipeListIcons}>
               <TouchableOpacity
-                style={{ marginRight: 15 }}
+                style={styles.iconButton}
                 onPress={handleFavPress}
               >
                 <FontAwesome name="heart-o" size={25} color={"tomato"} />
               </TouchableOpacity>
               <TouchableOpacity
-                style={{ marginRight: 15 }}
+                style={styles.iconButton}
                 onPress={handleListPress}
               >
                 <Feather name="list" size={25} color={"tomato"} />
@@ -94,4 +87,38 @@ const RecipeListScreen = () => {
 
 export default RecipeListScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  touchable: {
+    zIndex: 1,
+  },
+  safeArea: {
+    flex: 1,
+    marginHorizontal: 16,
+  },
+  categoriesContainer: {
+    marginTop: 5,
+  },
+  categoriesTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  recipeListContainer: {
+    marginTop: 0,
+    flex: 1,
+  },
+  recipeListHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  recipeListTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  recipeListIcons: {
+    flexDirection: "row",
+  },
+  iconButton: {
+    marginRight: 15,
+  },
+});

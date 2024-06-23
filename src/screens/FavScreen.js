@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -5,45 +6,49 @@ import {
   Keyboard,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
-import Header from "../components/Header";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import Header from "../components/Header";
 import FavList from "../components/FavList";
 
 const FavScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigation = useNavigation();
   const route = useRoute();
   const { uid } = route.params;
-  const navigation = useNavigation();
-  const handleSearch = (searchFilterText) => {
-    setSearchQuery(searchFilterText);
-  };
-  const handlePress = () => {
-    Keyboard.dismiss();
-  };
+
   return (
-    <TouchableWithoutFeedback onPress={handlePress} style={{ zIndex: 1 }}>
-      <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
-        {/* render header */}
+    <TouchableWithoutFeedback
+      onPress={Keyboard.dismiss}
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.safeArea}>
         <Pressable
-          style={{
-            flex: 1,
-            position: "absolute",
-            marginTop: 42,
-            zIndex: 2,
-          }}
+          style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Feather name={"chevron-left"} size={28} color="tomato" />
+          <Feather name="chevron-left" size={28} color="tomato" />
         </Pressable>
-        <Header headerText={""} headerIcon={"user-o"} />
+        <Header headerText="" headerIcon="user-o" />
         <FavList searchQuery={searchQuery} uid={uid} />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
 
-export default FavScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+    marginHorizontal: 16,
+  },
+  backButton: {
+    position: "absolute",
+    marginTop: 42,
+    zIndex: 2,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default FavScreen;
